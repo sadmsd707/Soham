@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - Soham Teacher Dashboard</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #2563eb 0%, #1e3a8a 100%);
+      color: #333;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-container {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .login-card {
+      background: white;
+      border-radius: 20px;
+      padding: 40px 35px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .logo {
+      margin-bottom: 30px;
+    }
+
+    .logo-icon {
+      font-size: 3.5rem;
+      margin-bottom: 15px;
+      display: block;
+    }
+
+    .logo h1 {
+      color: #1e3a8a;
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .logo p {
+      color: #64748b;
+      font-size: 1rem;
+      margin-top: 5px;
+    }
+
+    .login-form {
+      text-align: left;
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #374151;
+      font-size: 0.95rem;
+    }
+
+    .input-group {
+      position: relative;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 15px 45px 15px 15px;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background: #f9fafb;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: #2563eb;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .input-icon {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #9ca3af;
+      font-size: 1.2rem;
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #6b7280;
+      cursor: pointer;
+      font-size: 1.1rem;
+    }
+
+    .password-toggle:hover {
+      color: #374151;
+    }
+
+    .btn {
+      width: 100%;
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .btn:hover {
+      background: #1e3a8a;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .forgot-password {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .forgot-password a {
+      color: #2563eb;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.3s ease;
+    }
+
+    .forgot-password a:hover {
+      color: #1e3a8a;
+      text-decoration: underline;
+    }
+
+    .demo-accounts {
+      margin-top: 30px;
+      padding: 20px;
+      background: #f8fafc;
+      border-radius: 12px;
+      border: 1px dashed #cbd5e1;
+    }
+
+    .demo-accounts h3 {
+      color: #1e3a8a;
+      font-size: 1rem;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .demo-account {
+      background: white;
+      padding: 12px 15px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #e5e7eb;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .demo-account:hover {
+      border-color: #2563eb;
+      background: #f0f4ff;
+    }
+
+    .demo-account:last-child {
+      margin-bottom: 0;
+    }
+
+    .demo-account .role {
+      font-weight: 600;
+      color: #1e3a8a;
+      font-size: 0.9rem;
+    }
+
+    .demo-account .credentials {
+      color: #64748b;
+      font-size: 0.85rem;
+      margin-top: 4px;
+    }
+
+    /* Error Message */
+    .error-message {
+      background: #fee2e2;
+      border: 1px solid #fecaca;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-top: 15px;
+      color: #dc2626;
+      display: none;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .error-message.show {
+      display: flex;
+    }
+
+    .error-icon {
+      font-size: 1.2rem;
+    }
+
+    /* Success Message */
+    .success-message {
+      background: #d1fae5;
+      border: 1px solid #a7f3d0;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-top: 15px;
+      color: #065f46;
+      display: none;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .success-message.show {
+      display: flex;
+    }
+
+    .success-icon {
+      font-size: 1.2rem;
+    }
+
+    /* Loading animation */
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.9rem;
+    }
+
+    .footer a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Responsive styles */
+    @media (max-width: 480px) {
+      .login-card {
+        padding: 30px 25px;
+      }
+      
+      .logo h1 {
+        font-size: 1.7rem;
+      }
+      
+      .logo-icon {
+        font-size: 3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-card">
+      <div class="logo">
+        <span class="logo-icon">🏫</span>
+        <h1>Soham Academy</h1>
+        <p>Teacher Dashboard</p>
+      </div>
+
+      <!-- Error Message -->
+      <div class="error-message" id="errorMessage">
+        <span class="error-icon">⚠️</span>
+        <span id="errorText">Invalid teacher ID or password</span>
+      </div>
+
+      <!-- Success Message -->
+      <div class="success-message" id="successMessage">
+        <span class="success-icon">✅</span>
+        <span id="successText">Login successful! Redirecting...</span>
+      </div>
+
+      <form class="login-form" id="loginForm">
+        <div class="form-group">
+          <label for="teacherId">Teacher ID</label>
+          <div class="input-group">
+            <input type="text" id="teacherId" class="form-control" placeholder="Enter your teacher ID" required>
+            <span class="input-icon">👤</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-group">
+            <input type="password" id="password" class="form-control" placeholder="Enter your password" required>
+            <button type="button" class="password-toggle" id="passwordToggle">👁️</button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn" id="loginBtn">
+          <span>Sign In</span>
+        </button>
+      </form>
+
+      <div class="forgot-password">
+        <a href="#" onclick="forgotPassword()">Forgot your password?</a>
+      </div>
+
+      <!-- Demo Accounts -->
+      <div class="demo-accounts">
+        <h3><span>🔐</span> Your Login Credentials</h3>
+        <div class="demo-account" onclick="fillDemoCredentials('SHIV2007SA', 'SOHAM')">
+          <div class="role">Teacher Account</div>
+          <div class="credentials">ID: SHIV2007SA | Password: SOHAM</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>&copy; 2023 Soham Academy. All rights reserved. | <a href="#">Privacy Policy</a></p>
+    </div>
+  </div>
+
+  <script>
+    // Teacher account with your credentials
+    const teacherAccounts = {
+      'SHIV2007SA': {
+        password: 'SOHAM',
+        name: 'Shiv Soham',
+        role: 'teacher'
+      }
+    };
+
+    // Toggle password visibility
+    document.getElementById('passwordToggle').addEventListener('click', function() {
+      const passwordInput = document.getElementById('password');
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      this.textContent = type === 'password' ? '👁️' : '🔒';
+    });
+
+    // Fill demo credentials
+    function fillDemoCredentials(teacherId, password) {
+      document.getElementById('teacherId').value = teacherId;
+      document.getElementById('password').value = password;
+      showSuccessMessage('Credentials filled! Click Sign In to continue.');
+    }
+
+    // Show error message
+    function showErrorMessage(message) {
+      const errorMessage = document.getElementById('errorMessage');
+      const errorText = document.getElementById('errorText');
+      
+      errorText.textContent = message;
+      errorMessage.classList.add('show');
+      
+      // Hide success message if shown
+      document.getElementById('successMessage').classList.remove('show');
+      
+      setTimeout(() => {
+        errorMessage.classList.remove('show');
+      }, 5000);
+    }
+
+    // Show success message
+    function showSuccessMessage(message) {
+      const successMessage = document.getElementById('successMessage');
+      const successText = document.getElementById('successText');
+      
+      successText.textContent = message;
+      successMessage.classList.add('show');
+      
+      // Hide error message if shown
+      document.getElementById('errorMessage').classList.remove('show');
+      
+      setTimeout(() => {
+        successMessage.classList.remove('show');
+      }, 3000);
+    }
+
+    // Forgot password function
+    function forgotPassword() {
+      const teacherId = document.getElementById('teacherId').value;
+      
+      if (teacherId && teacherAccounts[teacherId]) {
+        showSuccessMessage(`Password reset link sent to registered email for ${teacherId}`);
+      } else if (teacherId) {
+        showErrorMessage('Teacher ID not found. Please check your ID or contact administrator.');
+      } else {
+        showErrorMessage('Please enter your Teacher ID first.');
+      }
+    }
+
+    // Form submission
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const teacherId = document.getElementById('teacherId').value.trim();
+      const password = document.getElementById('password').value;
+      
+      // Validation
+      if (!teacherId || !password) {
+        showErrorMessage('Please enter both Teacher ID and Password');
+        return;
+      }
+      
+      // Show loading state
+      const loginBtn = document.getElementById('loginBtn');
+      const originalText = loginBtn.innerHTML;
+      loginBtn.innerHTML = '<span class="loading"></span> Signing In...';
+      loginBtn.disabled = true;
+      
+      // Simulate API call delay
+      setTimeout(() => {
+        // Check credentials
+        if (teacherAccounts[teacherId] && teacherAccounts[teacherId].password === password) {
+          // Successful login
+          showSuccessMessage('Login successful! Redirecting to dashboard...');
+          
+          // Store login state in localStorage
+          localStorage.setItem('isLoggedIn', 'true');
+          localStorage.setItem('userRole', teacherAccounts[teacherId].role);
+          localStorage.setItem('teacherId', teacherId);
+          localStorage.setItem('teacherName', teacherAccounts[teacherId].name);
+          
+          // Redirect to dashboard after delay
+          setTimeout(() => {
+            window.location.href = 'teacher-dashboard.html';
+          }, 1500);
+        } else {
+          // Failed login
+          showErrorMessage('Invalid Teacher ID or Password. Please try again.');
+          
+          // Reset button
+          loginBtn.innerHTML = originalText;
+          loginBtn.disabled = false;
+        }
+      }, 1500);
+    });
+
+    // Check if user is already logged in
+    window.addEventListener('DOMContentLoaded', function() {
+      if (localStorage.getItem('isLoggedIn') === 'true') {
+        window.location.href = 'teacher-dashboard.html';
+      }
+      
+      // Focus on teacher ID field
+      document.getElementById('teacherId').focus();
+    });
+
+    // Enter key support
+    document.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+      }
+    });
+
+    // Auto-fill credentials on page load for convenience
+    window.addEventListener('load', function() {
+      // Uncomment the line below if you want credentials to auto-fill on page load
+      // fillDemoCredentials('SHIV2007SA', 'SOHAM');
+    });
+  </script>
+</body>
+</html>

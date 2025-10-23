@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>11th MHTCET (PCM) - Soham Teacher Dashboard</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: #f5f7fa;
+      color: #333;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    header {
+      background: #2563eb;
+      color: white;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      position: relative;
+      z-index: 100;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    /* Hamburger Menu Styles */
+    .hamburger {
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 30px;
+      height: 21px;
+      padding: 0;
+    }
+
+    .hamburger span {
+      display: block;
+      height: 3px;
+      width: 100%;
+      background-color: white;
+      border-radius: 3px;
+      transition: all 0.3s ease;
+    }
+
+    /* Side Navigation Panel */
+    .side-nav {
+      position: fixed;
+      top: 0;
+      right: -300px;
+      width: 300px;
+      height: 100vh;
+      background: linear-gradient(to bottom, #2563eb, #1e3a8a);
+      box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+      transition: right 0.4s ease;
+      z-index: 1000;
+      padding-top: 70px;
+    }
+
+    .side-nav.active {
+      right: 0;
+    }
+
+    .side-nav ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .side-nav ul li {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .side-nav ul li a {
+      display: block;
+      color: white;
+      text-decoration: none;
+      padding: 15px 30px;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .side-nav ul li a:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      padding-left: 40px;
+    }
+
+    .nav-icon {
+      font-size: 1.2rem;
+      width: 20px;
+      text-align: center;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Dashboard Styles */
+    .dashboard {
+      padding: 30px 20px;
+      max-width: 1400px;
+      margin: auto;
+    }
+
+    .welcome-section {
+      background: linear-gradient(to right, #2563eb, #1e3a8a);
+      color: white;
+      padding: 30px;
+      border-radius: 15px;
+      margin-bottom: 30px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .welcome-section::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 100%;
+      height: 200%;
+      background: rgba(255, 255, 255, 0.1);
+      transform: rotate(30deg);
+    }
+
+    .welcome-section h2 {
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+      position: relative;
+    }
+
+    .welcome-section p {
+      font-size: 1.2rem;
+      opacity: 0.9;
+      position: relative;
+    }
+
+    .dashboard-section {
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      margin-bottom: 30px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+
+    .dashboard-section h3 {
+      color: #1e3a8a;
+      margin-bottom: 20px;
+      font-size: 1.8rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dashboard-section h3 .icon {
+      font-size: 1.5rem;
+    }
+
+    .class-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .class-info h4 {
+      color: #1e3a8a;
+      font-size: 1.5rem;
+      margin-bottom: 5px;
+    }
+
+    .class-info p {
+      color: #64748b;
+    }
+
+    .class-actions {
+      display: flex;
+      gap: 15px;
+    }
+
+    .btn {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: inline-block;
+      text-decoration: none;
+      text-align: center;
+    }
+
+    .btn:hover {
+      background: #1e3a8a;
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: #f59e0b;
+    }
+
+    .btn-secondary:hover {
+      background: #d97706;
+    }
+
+    .btn-success {
+      background: #10b981;
+    }
+
+    .btn-success:hover {
+      background: #059669;
+    }
+
+    .btn-danger {
+      background: #ef4444;
+    }
+
+    .btn-danger:hover {
+      background: #dc2626;
+    }
+
+    /* Students List */
+    .students-list {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .student-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      background: #f8fafc;
+      border-radius: 8px;
+      border-left: 4px solid #2563eb;
+      transition: all 0.3s ease;
+    }
+
+    .student-item:hover {
+      transform: translateX(5px);
+    }
+
+    .student-info h4 {
+      color: #1e3a8a;
+      margin-bottom: 5px;
+    }
+
+    .student-info p {
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    .student-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-small {
+      padding: 8px 15px;
+      font-size: 0.9rem;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #64748b;
+    }
+
+    .empty-state .icon {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      opacity: 0.5;
+    }
+
+    .empty-state h4 {
+      color: #475569;
+      margin-bottom: 10px;
+    }
+
+    /* Student Profile Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 15px;
+      width: 90%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-header {
+      background: #2563eb;
+      color: white;
+      padding: 20px;
+      border-radius: 15px 15px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    .close-modal {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 5px;
+    }
+
+    .modal-body {
+      padding: 30px;
+    }
+
+    .student-profile {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 30px;
+      align-items: start;
+    }
+
+    .profile-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: #2563eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      color: white;
+      font-weight: bold;
+    }
+
+    .profile-details h4 {
+      color: #1e3a8a;
+      margin-bottom: 15px;
+      font-size: 1.3rem;
+    }
+
+    .detail-row {
+      display: flex;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .detail-label {
+      font-weight: 600;
+      color: #475569;
+      min-width: 120px;
+    }
+
+    .detail-value {
+      color: #1e293b;
+    }
+
+    footer {
+      background: #1e3a8a;
+      color: white;
+      text-align: center;
+      padding: 30px;
+      margin-top: 50px;
+    }
+
+    footer p {
+      font-size: 1rem;
+    }
+
+    /* Responsive styles */
+    @media (max-width: 768px) {
+      header {
+        padding: 15px 20px;
+      }
+      
+      .welcome-section h2 {
+        font-size: 1.8rem;
+      }
+      
+      .welcome-section p {
+        font-size: 1rem;
+      }
+      
+      .class-header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+      }
+      
+      .student-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+      }
+      
+      .student-actions {
+        width: 100%;
+        justify-content: space-between;
+      }
+      
+      .student-profile {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+      
+      .profile-avatar {
+        margin: 0 auto;
+      }
+    }
+
+    /* Loading animation */
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Soham - Teacher Dashboard</h1>
+    <button class="hamburger" id="hamburger">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </header>
+
+  <!-- Side Navigation -->
+  <div class="side-nav" id="sideNav">
+    <ul>
+      <li><a href="teacher-dashboard.html"><span class="nav-icon">📊</span>Dashboard</a></li>
+      <li><a href="teacher-classes.html"><span class="nav-icon">🏫</span>My Classes</a></li>
+      <li><a href="add-student.html"><span class="nav-icon">👨‍🎓</span>Add Student</a></li>
+      <li><a href="create-test.html"><span class="nav-icon">✏️</span>Create Test</a></li>
+      <li><a href="teacher-scores.html"><span class="nav-icon">📝</span>Student Scores</a></li>
+      <li><a href="teacher-resources.html"><span class="nav-icon">📚</span>Resources</a></li>
+      <li><a href="my-account.html"><span class="nav-icon">👤</span>My Account</a></li>
+      <li><a href="#" onclick="logout()"><span class="nav-icon">🚪</span>Logout</a></li>
+    </ul>
+  </div>
+
+  <!-- Overlay for closing the menu when clicking outside -->
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Student Profile Modal -->
+  <div class="modal" id="studentProfileModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Student Profile</h3>
+        <button class="close-modal" onclick="closeStudentProfile()">×</button>
+      </div>
+      <div class="modal-body" id="studentProfileContent">
+        <!-- Student profile content will be populated here -->
+      </div>
+    </div>
+  </div>
+
+  <main class="dashboard">
+    <section class="welcome-section">
+      <h2>11th MHTCET (PCM)</h2>
+      <p>Manage students in this Physics-Chemistry-Mathematics class</p>
+    </section>
+
+    <div class="dashboard-section">
+      <div class="class-header">
+        <div class="class-info">
+          <h4>11th MHTCET (PCM) - Students</h4>
+          <p id="classStats">0 students • 0 tests • 0 assignments</p>
+        </div>
+        <div class="class-actions">
+          <a href="add-student.html" class="btn">Add Student</a>
+          <a href="create-test.html" class="btn btn-secondary">Create Test</a>
+        </div>
+      </div>
+
+      <div class="students-list" id="studentsList">
+        <!-- Students will be populated by JavaScript -->
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2023 Soham - Entrance Exam Practice. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Add sample data if no students exist (for testing)
+    function initializeSampleData() {
+      const existingStudents = JSON.parse(localStorage.getItem('students')) || [];
+      const existingClassStats = JSON.parse(localStorage.getItem('classStats')) || {};
+      
+      if (existingStudents.length === 0) {
+        const sampleStudents = [
+          {
+            studentName: "Rohan Sharma",
+            studentId: "SOHA20251234",
+            studentClass: "11th MHTCET (PCM)",
+            studentMobile: "9876543210",
+            parentMobile: "9876543211",
+            timestamp: new Date().toISOString()
+          },
+          {
+            studentName: "Priya Patel", 
+            studentId: "SOHA20251235",
+            studentClass: "11th MHTCET (PCM)",
+            studentMobile: "9876543212",
+            parentMobile: "9876543213",
+            timestamp: new Date().toISOString()
+          },
+          {
+            studentName: "Aarav Kumar",
+            studentId: "SOHA20251236",
+            studentClass: "11th MHTCET (PCM)",
+            studentMobile: "9876543214",
+            parentMobile: "9876543215",
+            timestamp: new Date().toISOString()
+          },
+          {
+            studentName: "Sneha Desai",
+            studentId: "SOHA20251237",
+            studentClass: "11th MHTCET (PCM)",
+            studentMobile: "9876543216",
+            parentMobile: "9876543217",
+            timestamp: new Date().toISOString()
+          }
+        ];
+        localStorage.setItem('students', JSON.stringify(sampleStudents));
+      }
+      
+      if (!existingClassStats['11th MHTCET (PCM)']) {
+        const classStats = {
+          '11th MHTCET (PCM)': {
+            studentCount: 4,
+            testsCount: 3,
+            assignmentsCount: 8,
+            avgScore: 85
+          }
+        };
+        localStorage.setItem('classStats', JSON.stringify(classStats));
+      }
+    }
+
+    // Check if user is logged in and is a teacher
+    if (localStorage.getItem("isLoggedIn") !== "true" || localStorage.getItem("userRole") !== "teacher") {
+      window.location.href = "select-role.html";
+    }
+
+    // Logout function
+    function logout() {
+      // Show loading state
+      const logoutBtn = event.target;
+      const originalText = logoutBtn.innerHTML;
+      logoutBtn.innerHTML = '<span class="loading"></span> Logging out...';
+      logoutBtn.disabled = true;
+      
+      setTimeout(() => {
+        localStorage.removeItem("isLoggedIn");
+        localStorage.removeItem("userRole");
+        window.location.href = "login.html";
+      }, 1000);
+    }
+
+    // Hamburger menu functionality
+    const hamburger = document.getElementById('hamburger');
+    const sideNav = document.getElementById('sideNav');
+    const overlay = document.getElementById('overlay');
+
+    hamburger.addEventListener('click', () => {
+      sideNav.classList.toggle('active');
+      overlay.classList.toggle('active');
+      document.body.style.overflow = sideNav.classList.contains('active') ? 'hidden' : 'auto';
+    });
+
+    overlay.addEventListener('click', () => {
+      sideNav.classList.remove('active');
+      overlay.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    });
+
+    // Close menu when clicking on a link
+    const navLinks = document.querySelectorAll('.side-nav a');
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        sideNav.classList.remove('active');
+        overlay.classList.remove('active');
+        document.body.style.overflow = 'auto';
+      });
+    });
+
+    // Load class students
+    function loadClassStudents() {
+      const students = JSON.parse(localStorage.getItem('students')) || [];
+      const classStats = JSON.parse(localStorage.getItem('classStats')) || {};
+      
+      // Filter students for 11th MHTCET PCM class
+      const classStudents = students.filter(student => 
+        student.studentClass === '11th MHTCET (PCM)' || 
+        student.studentClass === '11th-mhtcet-pcm' ||
+        student.studentClass === '11th Science'
+      );
+
+      // Update class statistics display
+      const stats = classStats['11th MHTCET (PCM)'] || classStats['11th-mhtcet-pcm'] || {
+        studentCount: classStudents.length,
+        testsCount: 3,
+        assignmentsCount: 8
+      };
+      
+      document.getElementById('classStats').textContent = 
+        `${classStudents.length} students • ${stats.testsCount} tests • ${stats.assignmentsCount} assignments`;
+
+      // Update students list
+      const studentsList = document.getElementById('studentsList');
+      
+      if (classStudents.length > 0) {
+        let studentsHTML = '';
+        classStudents.forEach(student => {
+          studentsHTML += `
+            <div class="student-item">
+              <div class="student-info">
+                <h4>${student.studentName}</h4>
+                <p>Student ID: ${student.studentId} • Mobile: ${student.studentMobile}</p>
+              </div>
+              <div class="student-actions">
+                <button class="btn btn-small" onclick="viewStudentProfile('${student.studentId}')">View Profile</button>
+                <button class="btn btn-small btn-secondary">Assign Test</button>
+              </div>
+            </div>
+          `;
+        });
+        studentsList.innerHTML = studentsHTML;
+      } else {
+        studentsList.innerHTML = `
+          <div class="empty-state">
+            <div class="icon">👨‍🎓</div>
+            <h4>No Students Found</h4>
+            <p>This class doesn't have any students yet. Add your first student to get started.</p>
+            <a href="add-student.html" class="btn" style="margin-top: 20px;">Add Student</a>
+          </div>
+        `;
+      }
+    }
+
+    // View student profile
+    function viewStudentProfile(studentId) {
+      const students = JSON.parse(localStorage.getItem('students')) || [];
+      const student = students.find(s => s.studentId === studentId);
+      
+      if (student) {
+        const profileContent = document.getElementById('studentProfileContent');
+        profileContent.innerHTML = `
+          <div class="student-profile">
+            <div class="profile-avatar">
+              ${student.studentName.split(' ').map(n => n[0]).join('')}
+            </div>
+            <div class="profile-details">
+              <h4>${student.studentName}</h4>
+              <div class="detail-row">
+                <div class="detail-label">Student ID:</div>
+                <div class="detail-value">${student.studentId}</div>
+              </div>
+              <div class="detail-row">
+                <div class="detail-label">Class:</div>
+                <div class="detail-value">11th MHTCET (PCM)</div>
+              </div>
+              <div class="detail-row">
+                <div class="detail-label">Student Mobile:</div>
+                <div class="detail-value">${student.studentMobile}</div>
+              </div>
+              <div class="detail-row">
+                <div class="detail-label">Parent Mobile:</div>
+                <div class="detail-value">${student.parentMobile}</div>
+              </div>
+              <div class="detail-row">
+                <div class="detail-label">Date Added:</div>
+                <div class="detail-value">${new Date(student.timestamp).toLocaleDateString()}</div>
+              </div>
+            </div>
+          </div>
+        `;
+        
+        document.getElementById('studentProfileModal').classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    // Close student profile modal
+    function closeStudentProfile() {
+      document.getElementById('studentProfileModal').classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('studentProfileModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeStudentProfile();
+      }
+    });
+
+    // Load class students when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      initializeSampleData();
+      loadClassStudents();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Select Role - Soham</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: #f5f7fa;
+      color: #333;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    header {
+      background: #2563eb;
+      color: white;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      position: relative;
+      z-index: 100;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    /* Hamburger Menu Styles */
+    .hamburger {
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 30px;
+      height: 21px;
+      padding: 0;
+    }
+
+    .hamburger span {
+      display: block;
+      height: 3px;
+      width: 100%;
+      background-color: white;
+      border-radius: 3px;
+      transition: all 0.3s ease;
+    }
+
+    /* Side Navigation Panel */
+    .side-nav {
+      position: fixed;
+      top: 0;
+      right: -300px;
+      width: 300px;
+      height: 100vh;
+      background: linear-gradient(to bottom, #2563eb, #1e3a8a);
+      box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+      transition: right 0.4s ease;
+      z-index: 1000;
+      padding-top: 70px;
+    }
+
+    .side-nav.active {
+      right: 0;
+    }
+
+    .side-nav ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .side-nav ul li {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .side-nav ul li a {
+      display: block;
+      color: white;
+      text-decoration: none;
+      padding: 15px 30px;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+    }
+
+    .side-nav ul li a:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      padding-left: 40px;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Role Selection Section */
+    .role-selection {
+      padding: 80px 20px;
+      max-width: 1200px;
+      margin: auto;
+      text-align: center;
+    }
+
+    .role-selection h2 {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+      color: #1e3a8a;
+    }
+
+    .role-selection p {
+      font-size: 1.2rem;
+      margin-bottom: 50px;
+      color: #555;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cards-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 40px;
+      margin-bottom: 50px;
+    }
+
+    .role-card {
+      background: white;
+      padding: 40px 30px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: all 0.3s ease;
+      border-top: 4px solid #2563eb;
+      flex: 1;
+      min-width: 300px;
+      max-width: 350px;
+      cursor: pointer;
+    }
+
+    .role-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    }
+
+    .role-card.student {
+      border-top-color: #10b981;
+    }
+
+    .role-card.teacher {
+      border-top-color: #f59e0b;
+    }
+
+    .role-icon {
+      font-size: 4rem;
+      margin-bottom: 20px;
+    }
+
+    .role-card h3 {
+      color: #1e3a8a;
+      margin-bottom: 15px;
+      font-size: 1.8rem;
+    }
+
+    .role-card p {
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 25px;
+    }
+
+    .role-card button {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      font-size: 1.1rem;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .role-card.student button {
+      background: #10b981;
+    }
+
+    .role-card.teacher button {
+      background: #f59e0b;
+    }
+
+    .role-card button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .info-section {
+      background: white;
+      border-radius: 15px;
+      padding: 40px;
+      margin-top: 40px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+
+    .info-section h3 {
+      color: #1e3a8a;
+      margin-bottom: 20px;
+      font-size: 1.8rem;
+      text-align: center;
+    }
+
+    .info-section p {
+      color: #555;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    footer {
+      background: #1e3a8a;
+      color: white;
+      text-align: center;
+      padding: 30px;
+      margin-top: 50px;
+    }
+
+    footer p {
+      font-size: 1rem;
+    }
+
+    /* Responsive styles */
+    @media (max-width: 768px) {
+      header {
+        padding: 15px 20px;
+      }
+      
+      .role-selection h2 {
+        font-size: 2rem;
+      }
+      
+      .role-selection p {
+        font-size: 1.1rem;
+      }
+      
+      .cards-container {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .role-card {
+        width: 100%;
+        max-width: 400px;
+      }
+      
+      .info-section {
+        padding: 25px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Soham</h1>
+    <button class="hamburger" id="hamburger">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </header>
+
+  <!-- Side Navigation -->
+  <div class="side-nav" id="sideNav">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="exam.html">Practice</a></li>
+      <li><a href="scores.html">Scores</a></li>
+      <li><a href="board-prep.html">Board Preparation</a></li>
+      <li><a href="about-us.html">About Us</a></li>
+      <li><a href="#" onclick="logout()">Logout</a></li>
+    </ul>
+  </div>
+
+  <!-- Overlay for closing the menu when clicking outside -->
+  <div class="overlay" id="overlay"></div>
+
+  <section class="role-selection">
+    <h2>Select Your Role</h2>
+    <p>Choose how you'd like to use Soham. Your experience will be tailored based on your selection.</p>
+    
+    <div class="cards-container">
+      <div class="role-card student">
+        <div class="role-icon">🎓</div>
+        <h3>Student</h3>
+        <p>Access practice tests, track your progress, and improve your exam performance with personalized recommendations.</p>
+        <button onclick="selectRole('student')">Continue as Student</button>
+      </div>
+      
+      <div class="role-card teacher">
+        <div class="role-icon">👨‍🏫</div>
+        <h3>Teacher</h3>
+        <p>Create custom tests, monitor student performance, and manage classroom activities with our teacher dashboard.</p>
+        <button onclick="selectRole('teacher')">Continue as Teacher</button>
+      </div>
+    </div>
+    
+    <div class="info-section">
+      <h3>Need Help Choosing?</h3>
+      <p><strong>Students</strong> can practice with thousands of MCQs, track their progress over time, and get personalized recommendations for improvement. Our adaptive learning system helps identify weak areas and provides targeted practice.</p>
+      <p><strong>Teachers</strong> can create custom tests, assign them to students, monitor class performance, and generate detailed analytics. The teacher dashboard provides insights into student progress and helps identify areas where the class needs more focus.</p>
+      <p>You can change your role later from your profile settings if needed.</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2023 Soham - Entrance Exam Practice. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Check if user is logged in
+    if (localStorage.getItem("isLoggedIn") !== "true") {
+      window.location.href = "login.html";
+    }
+
+    // Check if user has already selected a role
+    if (localStorage.getItem("userRole")) {
+      redirectToDashboard();
+    }
+
+    // Role selection function
+    function selectRole(role) {
+      localStorage.setItem("userRole", role);
+      redirectToDashboard();
+    }
+
+    // Redirect to appropriate dashboard
+    function redirectToDashboard() {
+      const role = localStorage.getItem("userRole");
+      if (role === "student") {
+        window.location.href = "index.html";
+      } else if (role === "teacher") {
+        window.location.href = "teacher-dashboard.html";
+      }
+    }
+
+    // Logout function
+    function logout() {
+      localStorage.removeItem("isLoggedIn");
+      localStorage.removeItem("userRole");
+      window.location.href = "login.html";
+    }
+
+    // Hamburger menu functionality
+    const hamburger = document.getElementById('hamburger');
+    const sideNav = document.getElementById('sideNav');
+    const overlay = document.getElementById('overlay');
+
+    hamburger.addEventListener('click', () => {
+      sideNav.classList.toggle('active');
+      overlay.classList.toggle('active');
+      document.body.style.overflow = sideNav.classList.contains('active') ? 'hidden' : 'auto';
+    });
+
+    overlay.addEventListener('click', () => {
+      sideNav.classList.remove('active');
+      overlay.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    });
+
+    // Close menu when clicking on a link
+    const navLinks = document.querySelectorAll('.side-nav a');
+    navLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        sideNav.classList.remove('active');
+        overlay.classList.remove('active');
+        document.body.style.overflow = 'auto';
+      });
+    });
+  </script>
+</body>
+</html>
